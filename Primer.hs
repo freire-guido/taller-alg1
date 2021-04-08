@@ -23,7 +23,16 @@ parteEntera n | 0 <= n && n < 1 = 0
 esMultiploTres :: Int -> Bool
 esMultiploTres n | n - 3 == 0 = True
                  | n - 3 < 0 = False
-                 | otherwise = esMultiploTres (n -3)
+                 | otherwise = esMultiploTres (n - 3)
 
 sumaImpares :: Int -> Int
 sumaImpares n = n^2 --Como seria recursivamente?
+
+-- Extra 1
+
+digito :: Int -> Integer -> Integer
+digito i n = mod (div n (10^(i-1))) 10
+
+sumaDeDigitos :: Integer -> Integer
+sumaDeDigitos n | div n 10 < 10 = digito 1 n + digito 2 n
+                | otherwise = digito 1 n + sumaDeDigitos (div n 10)
