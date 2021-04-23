@@ -97,7 +97,7 @@ esFactorialDesde n k
 esFactorial :: Integer -> Bool
 esFactorial n = esFactorialDesde n 1
 
-{-menorFactDesde :: Int -> Int
+menorFactDesde :: Integer -> Integer
 menorFactDesde n
   | esFactorial n = n
-  | otherwise = menorFactDesde (n + 1)-}
+  | otherwise = menorFactDesde (n + 1)
