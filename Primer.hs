@@ -87,20 +87,15 @@ minimoPrimoDesde n
   | esPrimo n = n
   | otherwise = minimoPrimoDesde (n + 1)
 
-esFactorialHasta :: Integer -> Integer -> Bool
-esFactorialHasta n 1 = False
-esFactorialHasta n k
+esFactorialDesde :: Integer -> Integer -> Bool
+esFactorialDesde 1 k = False -- Por definicion no es factorial
+esFactorialDesde n k
   | factorial k == n = True
-  | otherwise = esFactorialHasta n (k -1)
-
-esFactorialDesdeHasta :: Integer -> Integer -> Bool
-esFactorialDesdeHasta n k
-  | esFactorialHasta n k = True
   | factorial k > n = False
-  | otherwise = esFactorialDesdeHasta n (k + 1)
+  | otherwise = esFactorialDesde n (k + 1)
 
 esFactorial :: Integer -> Bool
-esFactorial n = esFactorialDesdeHasta n 1
+esFactorial n = esFactorialDesde n 1
 
 {-menorFactDesde :: Int -> Int
 menorFactDesde n
