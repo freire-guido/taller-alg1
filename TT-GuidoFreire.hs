@@ -41,21 +41,18 @@ descomposicionEnPrimosPreciso (i, j) n
   | otherwise = descomposicionEnPrimosPreciso (i + 1, j) n
 
 -- EJERCICIO 4: Recibe un numero natural n par mayor que 2 y devuelve la cantidad de pares ordenados (a, b) de numeros primos tales que a + b == n
-{-
 numeroDeDescomposiciones :: Integer -> Integer
-numeroDeDescomposiciones n
-  |
--}
+numeroDeDescomposiciones = numeroDeDescomposicionesDesde (1, 1)
+
 numeroDeDescomposicionesDesde :: (Integer, Integer) -> Integer -> Integer
 numeroDeDescomposicionesDesde (i, j) n
-  | snd (descomposicionEnPrimosPreciso (i, j) n) + 2 >= n = 1
-  | i == j = 1 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosPrecisoIJ (i, j) n) + 1) n
-  | otherwise = 1 + numeroDeDescomposicionesDesde (fst (descomposicionEnPrimosPrecisoIJ (i, j) n) + 1, snd (descomposicionEnPrimosPrecisoIJ (i, j) n)) n --REVISAR
+  | nEsimoPrimo j + 2 > n = 0
+  | fst (descomposicionEnPrimosPreciso (i, j) n) == snd (descomposicionEnPrimosPreciso (i, j) n) = 1 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosPrecisoIJ (i, j) n) + 1) n
+  | otherwise = 2 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosPrecisoIJ (i, j) n) + 1) n --REVISAR
 
 -- Reimplementacion de la funcion descomposicionEnPrimosPreciso, devolviendo el i y j en lugar de los i y j-esimos primos
 descomposicionEnPrimosPrecisoIJ :: (Integer, Integer) -> Integer -> (Integer, Integer)
 descomposicionEnPrimosPrecisoIJ (i, j) n
-  | nEsimoPrimo j + 2 >= n = (0, 0) --TEMP
   | nEsimoPrimo i + nEsimoPrimo j == n = (i, j)
   | i == j = descomposicionEnPrimosPrecisoIJ (1, j + 1) n
   | otherwise = descomposicionEnPrimosPrecisoIJ (i + 1, j) n
