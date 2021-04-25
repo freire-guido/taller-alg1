@@ -31,31 +31,49 @@ verificarConjeturaHasta n
 
 -- EJERCICIO 3: Recibe un numero natural n par mayor que 2 y devuelve un par ordenado (a,b) de numeros primos tales que a + b == n
 descomposicionEnPrimos :: Integer -> (Integer, Integer)
-descomposicionEnPrimos = descomposicionEnPrimosPreciso (1, 1)
+descomposicionEnPrimos = descomposicionEnPrimosDesde (1, 1)
 
 -- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
-descomposicionEnPrimosPreciso :: (Integer, Integer) -> Integer -> (Integer, Integer)
-descomposicionEnPrimosPreciso (i, j) n
+descomposicionEnPrimosDesde :: (Integer, Integer) -> Integer -> (Integer, Integer)
+descomposicionEnPrimosDesde (i, j) n
   | nEsimoPrimo i + nEsimoPrimo j == n = (nEsimoPrimo i, nEsimoPrimo j)
-  | i == j = descomposicionEnPrimosPreciso (1, j + 1) n
-  | otherwise = descomposicionEnPrimosPreciso (i + 1, j) n
+  | i == j = descomposicionEnPrimosDesde (1, j + 1) n
+  | otherwise = descomposicionEnPrimosDesde (i + 1, j) n
+
+-- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
+descomposicionEnPrimosDesdeIJ :: (Integer, Integer) -> Integer -> (Integer, Integer)
+descomposicionEnPrimosDesdeIJ (i, j) n
+  | nEsimoPrimo i + nEsimoPrimo j == n = (i, j)
+  | i == j = descomposicionEnPrimosDesdeIJ (1, j + 1) n
+  | otherwise = descomposicionEnPrimosDesdeIJ (i + 1, j) n
+
+-- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
+dEPD :: (Integer, Integer) -> Integer -> (Integer, Integer)
+dEPD (i, j) n
+  | j + 2 > n = (0, 0)
+  | minimoPrimoDesde (i + 1) + minimoPrimoDesde (j + 1) == n = (minimoPrimoDesde (i + 1), minimoPrimoDesde (j + 1))
+  | i == j = dEPD (1, j + 1) n
+  | otherwise = dEPD (i + 1, j) n
 
 -- EJERCICIO 4: Recibe un numero natural n par mayor que 2 y devuelve la cantidad de pares ordenados (a, b) de numeros primos tales que a + b == n
-numeroDeDescomposiciones :: Integer -> Integer
-numeroDeDescomposiciones = numeroDeDescomposicionesDesde (1, 1)
+{-numeroDeDescomposiciones :: Integer -> Integer
+numeroDeDescomposiciones = numeroDeDescomposicionesDesde (2, 2)-}
+
+-- nDD usa numeros primos en vez de posiciones i / j de numeros primos, ahorra calculo de nEsimosPrimos y ademas puede empezar a contar primos desde j=n/2
+nDD :: Integer -> Integer
+nDD n = nDDD (dEPD(div n 2, div n 2) n) n
+
+nDDD :: (Integer, Integer) -> Integer -> Integer
+nDDD (i, j) n
+  | j == 0 = 0
+  | i == j = 1 + nDDD (dEPD (i, j) n) n
+  | otherwise = 2 + nDDD (dEPD (i, j) n) n
 
 numeroDeDescomposicionesDesde :: (Integer, Integer) -> Integer -> Integer
 numeroDeDescomposicionesDesde (i, j) n
   | nEsimoPrimo j + 2 > n = 0
-  | fst (descomposicionEnPrimosPreciso (i, j) n) == snd (descomposicionEnPrimosPreciso (i, j) n) = 1 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosPrecisoIJ (i, j) n) + 1) n
-  | otherwise = 2 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosPrecisoIJ (i, j) n) + 1) n --REVISAR
-
--- Reimplementacion de la funcion descomposicionEnPrimosPreciso, devolviendo el i y j en lugar de los i y j-esimos primos
-descomposicionEnPrimosPrecisoIJ :: (Integer, Integer) -> Integer -> (Integer, Integer)
-descomposicionEnPrimosPrecisoIJ (i, j) n
-  | nEsimoPrimo i + nEsimoPrimo j == n = (i, j)
-  | i == j = descomposicionEnPrimosPrecisoIJ (1, j + 1) n
-  | otherwise = descomposicionEnPrimosPrecisoIJ (i + 1, j) n
+  | fst (descomposicionEnPrimosDesde (i, j) n) == snd (descomposicionEnPrimosDesde (i, j) n) = 1 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosDesdeIJ (i, j) n) + 1) n
+  | otherwise = 2 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosDesdeIJ (i, j) n) + 1) n
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
