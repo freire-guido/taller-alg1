@@ -10,15 +10,16 @@ TURNO TARDE
 
 -- EJERCICIO 1: Recibe un numero natural n y devuelve True si y solo si el n es par, mayor que 2 y suma de dos numeros primos o False en caso contrario.
 satisfaceGoldbach :: Integer -> Bool
-satisfaceGoldbach n = satisfaceGoldbachDesde n (div n 2)
+satisfaceGoldbach n
+  | n <= 2 || odd n = False
+  | otherwise = satisfaceGoldbachDesde n (div n 2)
 
 -- Recibe tres numeros naturales i j n y devuelve True si y solo si el n es par, mayor que 2 y suma del i y j-esimos numeros primos.
 -- Intenta con el siguiente i-esimo numero primo en caso contrario, hasta que el mismo es igual al j-esimo numero primo.
 -- En ese caso intenta con el siguiente j-esimo numero primo y empieza a contar de nuevo con el i.
 satisfaceGoldbachDesde :: Integer -> Integer -> Bool
 satisfaceGoldbachDesde n k
-  | n <= 2 || odd n = False
-  | esPrimo (n - minimoPrimoDesde k) = True
+  | esPrimo k && esPrimo (n - k) = True
   | otherwise = satisfaceGoldbachDesde n (k + 1)
 
 -- EJERCICIO 2: Recibe un numero natural n par mayor que 2 y devuelve True si y solo si la conjetura es cierta para todos los naturales pares mayores que 2 y menores o iguales que n o False en caso contrario.
