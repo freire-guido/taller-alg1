@@ -12,15 +12,14 @@ TURNO TARDE
 satisfaceGoldbach :: Integer -> Bool
 satisfaceGoldbach n
   | n <= 2 || odd n = False
-  | otherwise = satisfaceGoldbachDesde n (div n 2)
+  | otherwise = satisfaceGoldbachDesde n 2
 
--- Recibe tres numeros naturales i j n y devuelve True si y solo si el n es par, mayor que 2 y suma del i y j-esimos numeros primos.
--- Intenta con el siguiente i-esimo numero primo en caso contrario, hasta que el mismo es igual al j-esimo numero primo.
--- En ese caso intenta con el siguiente j-esimo numero primo y empieza a contar de nuevo con el i.
+-- Recibe dos numeros naturales y devuelve True si y solo si existen dos primos que sumados sean iguales a n
 satisfaceGoldbachDesde :: Integer -> Integer -> Bool
 satisfaceGoldbachDesde n k
-  | esPrimo k && esPrimo (n - k) = True
-  | otherwise = satisfaceGoldbachDesde n (k + 1)
+  | k > div n 2 = False
+  | esPrimo (n - k) = True
+  | otherwise = satisfaceGoldbachDesde n (minimoPrimoDesde (k + 1))
 
 -- EJERCICIO 2: Recibe un numero natural n par mayor que 2 y devuelve True si y solo si la conjetura es cierta para todos los naturales pares mayores que 2 y menores o iguales que n o False en caso contrario.
 verificarConjeturaHasta :: Integer -> Bool
@@ -30,39 +29,32 @@ verificarConjeturaHasta n
   | otherwise = False
 
 -- EJERCICIO 3: Recibe un numero natural n par mayor que 2 y devuelve un par ordenado (a,b) de numeros primos tales que a + b == n
-dEP :: Integer -> (Integer, Integer)
-dEP = dEPD (1, 1)
+descomposicionEnPrimos :: Integer -> (Integer, Integer)
+descomposicionEnPrimos n = descomposicionEnPrimosDesde n 2
 
 -- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
-dEPD :: (Integer, Integer) -> Integer -> (Integer, Integer)
-dEPD (i, j) n
-  | j + 2 > n = (0, 0)
-  | minimoPrimoDesde (i + 1) + minimoPrimoDesde (j + 1) == n = (minimoPrimoDesde (i + 1), minimoPrimoDesde (j + 1))
-  | i == j = dEPD (1, j + 1) n
-  | otherwise = dEPD (i + 1, j) n
+descomposicionEnPrimosDesde :: Integer -> Integer -> (Integer, Integer)
+descomposicionEnPrimosDesde n k
+  | esPrimo (n - k) = (k, n - k)
+  | otherwise = descomposicionEnPrimosDesde n (minimoPrimoDesde (k + 1))
 
-{-
 -- EJERCICIO 4: Recibe un numero natural n par mayor que 2 y devuelve la cantidad de pares ordenados (a, b) de numeros primos tales que a + b == n
 numeroDeDescomposiciones :: Integer -> Integer
-numeroDeDescomposiciones = numeroDeDescomposicionesDesde (2, 2)
+numeroDeDescomposiciones n = numeroDeDescomposicionesDesde n (fst (descomposicionEnPrimos n))
 
--- nDD usa numeros primos en vez de posiciones i / j de numeros primos, ahorra calculo de nEsimosPrimos y ademas puede empezar a contar primos desde j=n/2
-nDD :: Integer -> Integer
-nDD n = nDDD (dEPD(div n 2, div n 2) n) n
+numeroDeDescomposicionesDesde :: Integer -> Integer -> Integer
+numeroDeDescomposicionesDesde n k
+  | k > div n 2 = 0
+  | 2 * k == n = 1 + numeroDeDescomposicionesDesde n (fst (descomposicionEnPrimosDesde n (k + 1)))
+  | otherwise = 2 + numeroDeDescomposicionesDesde n (fst (descomposicionEnPrimosDesde n (k + 1)))
 
-nDDD :: (Integer, Integer) -> Integer -> Integer
-nDDD (i, j) n
-  | j == 0 = 0
-  | i == j = 1 + nDDD (dEPD (i, j) n) n
-  | otherwise = 2 + nDDD (dEPD (i, j) n) n
--}
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Las funciones de aca en adelante se utilizan para encontrar el minimo primo desde un numero (Clase 5)
 esPrimoDesde :: Integer -> Integer -> Bool
 esPrimoDesde n k
   | mod n k == 0 = False
-  | k > div n 2 = True
+  | k >= div n 2 = True
   | otherwise = esPrimoDesde n (k + 1)
 
 esPrimo :: Integer -> Bool
