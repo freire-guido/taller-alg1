@@ -32,7 +32,7 @@ verificarConjeturaHasta n
 descomposicionEnPrimos :: Integer -> (Integer, Integer)
 descomposicionEnPrimos n = descomposicionEnPrimosDesde n 2
 
--- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
+-- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo el par ordenado en lugar de un booleano
 descomposicionEnPrimosDesde :: Integer -> Integer -> (Integer, Integer)
 descomposicionEnPrimosDesde n k
   | esPrimo (n - k) = (k, n - k)
@@ -42,6 +42,7 @@ descomposicionEnPrimosDesde n k
 numeroDeDescomposiciones :: Integer -> Integer
 numeroDeDescomposiciones n = numeroDeDescomposicionesDesde n (fst (descomposicionEnPrimos n))
 
+--Recibe dos numeros naturales y devuelve el numero de descomposiciones de n desde k
 numeroDeDescomposicionesDesde :: Integer -> Integer -> Integer
 numeroDeDescomposicionesDesde n k
   | k > div n 2 = 0
