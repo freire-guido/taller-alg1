@@ -30,22 +30,8 @@ verificarConjeturaHasta n
   | otherwise = False
 
 -- EJERCICIO 3: Recibe un numero natural n par mayor que 2 y devuelve un par ordenado (a,b) de numeros primos tales que a + b == n
-descomposicionEnPrimos :: Integer -> (Integer, Integer)
-descomposicionEnPrimos = descomposicionEnPrimosDesde (1, 1)
-
--- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
-descomposicionEnPrimosDesde :: (Integer, Integer) -> Integer -> (Integer, Integer)
-descomposicionEnPrimosDesde (i, j) n
-  | nEsimoPrimo i + nEsimoPrimo j == n = (nEsimoPrimo i, nEsimoPrimo j)
-  | i == j = descomposicionEnPrimosDesde (1, j + 1) n
-  | otherwise = descomposicionEnPrimosDesde (i + 1, j) n
-
--- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
-descomposicionEnPrimosDesdeIJ :: (Integer, Integer) -> Integer -> (Integer, Integer)
-descomposicionEnPrimosDesdeIJ (i, j) n
-  | nEsimoPrimo i + nEsimoPrimo j == n = (i, j)
-  | i == j = descomposicionEnPrimosDesdeIJ (1, j + 1) n
-  | otherwise = descomposicionEnPrimosDesdeIJ (i + 1, j) n
+dEP :: Integer -> (Integer, Integer)
+dEP = dEPD (1, 1)
 
 -- Reimplementacion de la funcion satisfaceGoldbachPreciso, devolviendo los i y j-esimos primos en lugar de un booleano
 dEPD :: (Integer, Integer) -> Integer -> (Integer, Integer)
@@ -68,12 +54,6 @@ nDDD (i, j) n
   | j == 0 = 0
   | i == j = 1 + nDDD (dEPD (i, j) n) n
   | otherwise = 2 + nDDD (dEPD (i, j) n) n
-
-numeroDeDescomposicionesDesde :: (Integer, Integer) -> Integer -> Integer
-numeroDeDescomposicionesDesde (i, j) n
-  | nEsimoPrimo j + 2 > n = 0
-  | fst (descomposicionEnPrimosDesde (i, j) n) == snd (descomposicionEnPrimosDesde (i, j) n) = 1 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosDesdeIJ (i, j) n) + 1) n
-  | otherwise = 2 + numeroDeDescomposicionesDesde (1, snd (descomposicionEnPrimosDesdeIJ (i, j) n) + 1) n
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
