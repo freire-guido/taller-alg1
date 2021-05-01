@@ -24,7 +24,7 @@ satisfaceGoldbachDesde n k
 -- EJERCICIO 2: Recibe un numero natural n par mayor que 2 y devuelve True si y solo si la conjetura es cierta para todos los naturales pares mayores que 2 y menores o iguales que n o False en caso contrario.
 verificarConjeturaHasta :: Integer -> Bool
 verificarConjeturaHasta n
-  | n == 2 = True
+  | n == 4 = True
   | satisfaceGoldbach n = verificarConjeturaHasta (n - 2)
   | otherwise = False
 
