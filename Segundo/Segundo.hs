@@ -65,7 +65,7 @@ agregar n c | n `elem` c = c
             | otherwise = n:c
 
 union :: Eq a => Set a -> Set a -> Set a
-union [] ys     = ys
+union [] ys = ys
 union (x:xs) ys = union xs (agregar x ys)
 
 incluido :: Set Int -> Set Int -> Bool
