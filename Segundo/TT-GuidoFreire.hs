@@ -4,9 +4,10 @@ type Jugada = (Int, Int)
 
 -- EJERCICIO 1: Recibe una posición p, una jugada válida j y devuelve la posición obtenida al realizar dicha jugada.
 jugar :: Posicion -> Jugada -> Posicion
-jugar p (i, n)
-  | i == 1 = (head p - n) : tail p
-  | otherwise = head p : jugar (tail p) (i -1, n)
+jugar (p : ps) (i, n)
+  | i == 1 && p - n > 0 = (p - n) : ps
+  | i == 1 && p - n == 0 = ps
+  | otherwise = p : jugar ps (i -1, n)
 
 -- EJERCICIO 2: Recibe una posición p y devuelve el conjunto de jugadas válidas a partir de p.
 posiblesJugadas :: Posicion -> [Jugada]
@@ -22,7 +23,7 @@ posiblesJugadasEn i x = (i, x) : posiblesJugadasEn i (x -1)
 
 unirJugadas :: [Jugada] -> [Jugada] -> [Jugada]
 unirJugadas [] t = t
-unirJugadas (s:st) t = unirJugadas st (s : t)
+unirJugadas (s : st) t = unirJugadas st (s : t)
 
 -- EJERCICIO 3: Decide si una posición p es ganadora.
 esPosicionGanadora :: Posicion -> Bool
@@ -32,14 +33,14 @@ hayJugadaGanadora :: Posicion -> [Jugada] -> Bool
 hayJugadaGanadora _ [] = False
 hayJugadaGanadora [] _ = False
 hayJugadaGanadora [1] _ = True
-hayJugadaGanadora p (j:js) = not (esPosicionGanadora (jugar p j)) || hayJugadaGanadora p js
+hayJugadaGanadora p (j : js) = not (esPosicionGanadora (jugar p j)) || hayJugadaGanadora p js
 
 -- EJERCICIO 4: Recibe una posición ganadora p y devuelve una jugada que dejaría al rival en una posición no ganadora.
 jugadaGanadora :: Posicion -> Jugada
 jugadaGanadora p = cualJugadaGanadora p (posiblesJugadas p)
 
 cualJugadaGanadora :: Posicion -> [Jugada] -> Jugada
-cualJugadaGanadora p (j:js)
+cualJugadaGanadora p (j : js)
   | not (esPosicionGanadora (jugar p j)) = j
   | otherwise = cualJugadaGanadora p js
 
@@ -49,6 +50,6 @@ numeroDeJugadasGanadoras p = cuantasJugadasGanadoras p (posiblesJugadas p)
 
 cuantasJugadasGanadoras :: Posicion -> [Jugada] -> Int
 cuantasJugadasGanadoras p [] = 0
-cuantasJugadasGanadoras p (j:js)
+cuantasJugadasGanadoras p (j : js)
   | not (esPosicionGanadora (jugar p j)) = 1 + cuantasJugadasGanadoras p js
   | otherwise = cuantasJugadasGanadoras p js
